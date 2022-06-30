@@ -10,14 +10,13 @@ def extended_route():
     def decorator(function):
         @wraps(function)
         def wrapper(viewset, request: Request, *args, **kwargs):
-            # Do nothing fancy if `extended_serializer_class` property of ViewSet is empty.
-            if not viewset.extended_serializer_class:
-              return function(viewset, request, *args, **kwargs)
-          
-            # Remember default ViewSet serializer.
-            original_serializer = viewset.serializer_class
             # Get serialized result with the default serializer.
             result = function(viewset, request, *args, **kwargs)
+
+            # Do nothing fancy if `extended_serializer_class` property of ViewSet is empty.
+            # Just return the result.
+            if not viewset.extended_serializer_class:
+                return result
 
             # If ?extended=1 does not appear in request query parameters
             # return default, not extended result.
